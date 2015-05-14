@@ -26,8 +26,19 @@ def form():
 
 	return render_template("input.html")
 
+@app.route('/submit', methods=['POST'])
+def inputform():
 
-
+	firstname = request.form["firstname"]
+	connection = sqlite3.connect('test')
+	# int dir(connection)
+	# turn "working"
+	cursor = connection.cursor()
+	QUERY = "INSERT INTO test VALUES(?)"
+	cursor.execute(QUERY, (firstname,))
+	# print dir(connection)
+	connection.commit()
+	return redirect('/show')
 
 
 
