@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>New Campaign</h1>
+
+    <form action="/campaigns/new" method='POST'>
+
+        <p>Campaign Information:</p>
+        <p>Campaign Description/ Title: <input type="text" name="campaign_description"></input></p>
+        <p>Campaign Start Date: <input type="datetime" name="campaign_start_date"></input></p>
+        <p>Campaign End Date: <input type="datetime" name="campaign_end_date"></input></p>
+        <p>Which Outreach Channels Were Used? (phone, mail, email):</p>
+        <p>Campaign Outreach 1: <input type="text" name="outreach_channel_one"></input></p>
+        <p>Campaign Outreach 2: <input type="text" name="outreach_channel_two"></input></p>
+        <p>Campaign Outreach 3: <input type="text" name="outreach_channel_three"></input></p>
+        <p>Total Funds Raised: <input type="text" name="total_funds_raised"></input></p>
+        <p>Campaign Fund Allocation  (Restricted or General): <input type="text" name="campaign_type"></input></p>
+        
+        <br>
+        <p><input type= "submit" value="submit"></p>
+    </form>
+
+    <p><a href="/home">Home</a></p>
+
+
+{% endblock %}

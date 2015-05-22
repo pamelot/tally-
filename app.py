@@ -1,50 +1,71 @@
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import (Flask, g, render_template, flash, redirect, url_for)
+from flask.ext.login import LoginManager
 
-import sqlite3 
+import forms
+import models
 
+DEBUG = True
+PORT = 5000
+HOST = '0.0.0.0'
 
 app = Flask(__name__)
+app.secret_key = 'rkgberigsrepgirg'
 
-@app.route('/hello')
-def sayhello():
-	return "say hello playas!"
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-@app.route('/show')
-def name():
-	connection = sqlite3.connect('test')
-	# int dir(connection)
-	# turn "working"
-	cursor = connection.cursor()
-	QUERY = "SELECT * FROM test"
-	cursor.execute(QUERY)
-	test = cursor.fetchall()
-	# print dir(connection)
-	return str(test)
-
-@app.route('/input', methods=['GET'])
-def form():
-
-	return render_template("input.html")
-
-@app.route('/submit', methods=['POST'])
-def inputform():
-
-	firstname = request.form["firstname"]
-	connection = sqlite3.connect('test')
-	# int dir(connection)
-	# turn "working"
-	cursor = connection.cursor()
-	QUERY = "INSERT INTO test VALUES(?)"
-	cursor.execute(QUERY, (firstname,))
-	# print dir(connection)
-	connection.commit()
-	return redirect('/show')
+@login_manager.user_loader
+def load_user(userid):
+    try:
+        return Model.User.get(models.User.id == userid)
+    except Model.DoesNotExist:
+        return None
 
 
+@app.before_request
+def before_request():
+    """Connect to the database before each request."""
+    g.db = Model.DATABASE
+    g.db.connect()
 
-if __name__== "__main__":
-	app.run(debug = True)
+
+@app.after_request
+def after_request(response):
+    """Close the database connection after each request."""
+    g.db.close()
+    return response
+
+
+# @app.route('/register', methods=('GET', 'POST'))
+# def register():
+#     form = forms.RegisterForm()
+#     if form.validate_on_submit():
+#         flash("Yay, you registered!", "success")
+#         models.User.create_user(
+#             username=form.username.data,
+#             email=form.email.data,
+#             password=form.password.data
+#         )
+#         return redirect(url_for('index'))
+#     return render_template('register.html', form=form)
+
+
+@app.route('/')
+def index():
+    return 'Hey'
 
 
 
-
+if __name__ == '__main__':
+    Model.initialize()
+    # try:
+    #     models.User.create_user(
+    #         username='kennethlove',
+    #         email='kenneth@teamtreehouse.com',
+    #         password='password',
+    #         admin=True
+    #     )
+    # except ValueError:
+    #     pass
+    app.run(debug=DEBUG, host=HOST, port=PORT)

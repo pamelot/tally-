@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Top 100 Contributions</h2>
+    <ul>
+      {% for contribution in contributions %}
+          <li>
+              
+                <p>Contribution Id</p>{{ contribution.contribution_id}} 
+                <p>Contribution Amount</p> {{contribution.contribution_amount }}
+              </a>
+          </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}
