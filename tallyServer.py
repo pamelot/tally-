@@ -3,6 +3,8 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 # //import os - not sure why this might be needed for log-in
 
+import sqlite3
+
 from alchemymodel import User, Donor, Donor_contact, Donor_note, Campaign, Contribution, db, connect_to_db
 
 from datetime import datetime
@@ -119,13 +121,45 @@ def new_donor_info():
     flash("Donor %s added." % first_name)
     return redirect("/home")
 
+@app.route('/contributions')
+def contribution_view():
+
+    return render_template("contributions.html")
+
+@app.route('/contributions/new', methods=['GET'])
+def new_contribution_form():
+    
+    lists = Campaign.query.all()
+    
+    return render_template("contributions_new.html", lists=lists)
+
+@app.route('/contributions/new', methods=['POST'])
+def new_contribution_info():
+
+    donor_id = request.form["donor_id"]
+    campaign_id = request.form["campaign_id"]
+    date_of_contribution = request.form["date_of_contribution"]
+    campaign_type = request.form["campaign_type"]
+    contribution_amount = request.form["contribution_amount"]
+    payment_method = request.form["payment_method"]
+    date_acknowledgement_sent = request.form["date_acknowledgement_sent"]
+    contribution_note = request.form["contribution_note"]
+
+    new_contribution = Contribution(donor_id=donor_id, campaign_id=campaign_id, date_of_contribution=date_of_contribution, contribution_amount=contribution_amount, payment_method=payment_method, date_acknowledgement_sent=date_acknowledgement_sent, contribution_note=contribution_note)
+    
+
+    db.session.add(new_contribution)
+    db.session.commit()
+
+    flash("Contribution for Donor %s has been added." % donor_id)
+    return redirect("/home")
+
 
 @app.route('/campaigns')
 def campaign_view():
 
     return render_template("campaigns.html")
 
-    # return redirect("/hello")
 
 @app.route('/campaigns/new', methods=['GET'])
 def new_campaign_form():
@@ -135,25 +169,15 @@ def new_campaign_form():
 @app.route('/campaigns/new', methods=['POST'])
 def new_campaign_info():
 
-    campaign_description = request.form['campaign_description']
-    print campaign_description
-    campaign_start_date = request.form["campaign_start_date"]
-    print campaign_start_date
-    campaign_end_date = request.form["campaign_end_date"]
-    print campaign_end_date
-    outreach_channel_one = request.form["outreach_channel_one"]
-    print outreach_channel_one
-    outreach_channel_two = request.form['outreach_channel_two']
-    print outreach_channel_two
-    outreach_channel_three = request.form['outreach_channel_three']
-    print outreach_channel_three
-    total_funds_raised = request.form['total_funds_raised']
-    print total_funds_raised
+
     campaign_type = request.form['campaign_type']
-    print campaign_type
-    print "working"
-    new_campaign = Campaign(campaign_description=campaign_description, campaign_start_date=campaign_start_date, campaign_end_date=campaign_end_date, outreach_channel_one=outreach_channel_one, outreach_channel_two=outreach_channel_two, outreach_channel_three=outreach_channel_three, total_funds_raised=total_funds_raised, campaign_type=campaign_type)
-    print "still working"
+    campaign_description = request.form['campaign_description']
+    campaign_start_date = request.form["campaign_start_date"]
+    campaign_end_date = request.form["campaign_end_date"]
+    outreach_channels = request.form[len('outreach_channel')].append('outreach_channel')
+    total_funds_raised = request.form['total_funds_raised']
+ 
+    new_campaign = Campaign(campaign_description=campaign_description, campaign_start_date=campaign_start_date, campaign_end_date=campaign_end_date, outreach_channel_one=outreach_channel_one, total_funds_raised=total_funds_raised, campaign_type=campaign_type)
     db.session.add(new_campaign)
     db.session.commit()
 

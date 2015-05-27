@@ -50,7 +50,6 @@ class Donor_contact(db.Model):
     __tablename__ = "donor_contacts"
 
     donor_contact_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    donor_id = db.Column(db.Integer, db.ForeignKey('donors.donor_id'))
     date_contact_added = db.Column(db.DateTime, nullable=True)
     main_phone = db.Column(db.String(64), nullable=True)
     street_address = db.Column(db.String(64), nullable=True)
@@ -85,8 +84,8 @@ class Campaign(db.Model):
 
     campaign_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     campaign_description = db.Column(db.String(64), nullable=True)
-    campaign_start_date = db.Column(db.DateTime, nullable=True)
-    campaign_end_date = db.Column(db.DateTime, nullable=True)
+    campaign_start_date = db.Column(db.String(64), nullable=True)
+    campaign_end_date = db.Column(db.String(64), nullable=True)
     outreach_channel_one = db.Column(db.String(64), nullable=True)
     outreach_channel_two = db.Column(db.String(64), nullable=True)
     outreach_channel_three = db.Column(db.String(64), nullable=True)
@@ -103,12 +102,12 @@ class Contribution(db.Model):
     __tablename__ = "contributions"
 
     contribution_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    campaign_id = db.Column(db.Integer, db.ForeignKey('campaigns.campaign_id'))
+    campaign_id = db.Column(db.Integer, db.ForeignKey ('campaigns.campaign_id'))
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.donor_id'))
     contribution_amount = db.Column(db.Integer, nullable=True)
-    date_of_contribution = db.Column(db.DateTime, nullable=True)
+    date_of_contribution = db.Column(db.String(64), nullable=True)
     payment_method = db.Column(db.String(64), nullable=True)
-    date_acknowledgement_sent = db.Column(db.DateTime, nullable=True)
+    date_acknowledgement_sent = db.Column(db.String(64), nullable=True)
     contribution_note = db.Column(db.String(64), nullable=True)
     
 
