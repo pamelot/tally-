@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+import flask.ext.whooshalchemy as whooshalchemy
+
 
 
 # This is the connection to the SQLite database; we're getting this through
@@ -30,6 +32,8 @@ class User(db.Model):
 class Donor(db.Model):
     
     __tablename__ = "donors"
+
+    __searchable__ = ['first_name', 'last_name']
 
     donor_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     donor_contact_id = db.Column(db.Integer, db.ForeignKey('donor_contacts.donor_contact_id'))
@@ -137,3 +141,4 @@ if __name__ == "__main__":
     from tallyServer import app
     connect_to_db(app)
     print "Connected to DB."
+    whooshalchemy.whoosh_index(app, Donor)
