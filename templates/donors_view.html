@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    <h2>Donor Information for {{ donor.first_name}} {{donor.last_name}}</h2>
+
+
+    <form action="new" method='POST'>
+
+        <p>Basic Information</p>
+        <p>first name: <input type="text" name="first_name"></input></p>
+        <p>last name: <input type="text" name="last_name"></input></p>
+        <p>middle name: <input type="text" name="middle_name"></input></p>
+        <p>email: <input type="text" name="email"></input></p>
+        <p>phone: <input type="text" name="phone"></input></p>
+        <p>street address: <input type="text" name="address"></input></p>
+        <p>city: <input type="text" name="city"></input></p>
+        <p>state: <input type="text" name="state"></input></p>
+        <p>zip code: <input type="text" name="zip_code"></input></p>
+        <p>employer: <input type="text" name="employer"></input></p>
+        <p>position: <input type="text" name="position"></input></p>
+        
+        <br>
+        <p><input type= "submit" value="submit"></p>
+    </form>
+
+    <p><a href="/home">Home</a></p>
+
+
+{% endblock %}

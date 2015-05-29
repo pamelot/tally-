@@ -1,13 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
 <h1>Tally</h1>
 
 
 <p><a href="/donors/new">Create New Donor Record</a></p>
 
+    <br>
+<h2>Find Donor Records</h2>
 
-<p>Find Donor Record</p>
+	<form name="donor_view_form" action="/donors/list" method="POST">
+		<p>First Name: <input type="text" name="first_name"></input></p>
+		<p>Last Name: <input type="text" name="last_name"></input></p>
+		<p>Search Fields</p>
+		<input type="radio" name="search_field" value="first_last">First and Last Name</input>
+        <input type="radio" name="search_field" value="first_name">First Name Only</input>
+        <input type="radio" name="search_field" value="last_name">Last Name Only</input>
+	    <p><input type= "submit" value="submit"></p>
+    </form>
+
 
 <p><a href="/home">Home</a></p>
 

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Tally</h1>
+
+
+<h2>Create New Contribution Record</h2>
+
+<p>To create a new contribution, you must specify the donor. Search for the donor below:</p>
+
+	<form name="donor_form" action="/contributions" method="POST">
+		<p>first name: <input type="text" name="first_name"></input></p>
+		<p>last name: <input type="text" name="last_name"></input></p>
+	    <p><input type= "submit" value="submit"></p>
+    </form>
+
+    <br>
+<h2>Find Contribution Records</h2>
+
+	<form name="contribution_form" action="/contributions/list" method="POST">
+		<p>First Name: <input type="text" name="first_name"></input></p>
+		<p>Last Name: <input type="text" name="last_name"></input></p>
+		<p>Campaign Title: <input type="text" name="campaign_title"></input></p>
+		<p>Search Fields</p>
+		<input type="radio" name="search_field" value="first_last">First and Last Name</input>
+        <input type="radio" name="search_field" value="campaign">Campaign Title</input>
+        <input type="radio" name="search_field" value="campaign_last">Campaign Title and Last Name</input>
+        <input type="radio" name="search_field" value="campaign_first">Campaign Title and First Name</input>
+	    <p><input type= "submit" value="submit"></p>
+    </form>
+
+
+<p><a href="/home">Home</a></p>
+
+
+
+{% endblock %}

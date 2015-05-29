@@ -7,7 +7,7 @@ from datetime import datetime
 print 'hi'
 def load_users():
    
-    print "line"
+    
     U = open("Tally_generated_data/users.csv")
     for line in U:
         line = line.split(",")
@@ -114,7 +114,7 @@ def load_campaigns():
 
         campaign = Campaign(
             campaign_id=campaign_id,
-            campaign_description=campaign_description ,
+            campaign_description=campaign_description,
             campaign_start_date=campaign_start_date,  
             campaign_end_date=campaign_end_date,
             outreach_channel_one=outreach_channel_one,
@@ -134,7 +134,6 @@ def load_contributions():
     for line in CO:
         line = line.rstrip()
         line = line.split(",")
-        print line
         contribution_id = line[0]
         campaign_id = line[1]
         donor_id = line[2]
@@ -145,6 +144,8 @@ def load_contributions():
         a = line[6]
         date_acknowledgement_sent = datetime.strptime(a,"%Y-%m-%d %H:%M:%S")
         contribution_note = line[7]
+        campaign_description = line[8]
+        
 
 
         contribution = Contribution(
@@ -155,7 +156,8 @@ def load_contributions():
             date_of_contribution=date_of_contribution,
             payment_method=payment_method,
             date_acknowledgement_sent=date_acknowledgement_sent,
-            contribution_note=contribution_note
+            contribution_note=contribution_note,
+            campaign_description=campaign_description
             )
         db.session.add(contribution)
 

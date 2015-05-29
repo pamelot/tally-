@@ -33,7 +33,6 @@ class Donor(db.Model):
     
     __tablename__ = "donors"
 
-    __searchable__ = ['first_name', 'last_name']
 
     donor_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     donor_contact_id = db.Column(db.Integer, db.ForeignKey('donor_contacts.donor_contact_id'))
@@ -43,6 +42,7 @@ class Donor(db.Model):
     middle_name = db.Column(db.String(64), nullable=True)
     employer = db.Column(db.String(64), nullable=True)
     position = db.Column(db.String(64), nullable=True)
+
     
 
 def __repr__(self):
@@ -77,6 +77,7 @@ class Donor_note(db.Model):
     donor_note = db.Column(db.String(400), nullable=True)
     
 
+
 def __repr__(self):
         """provide helpful representation when printed"""
         return "<Donor_notes donor_note_id=%s donor_note=%s>" % (self.donor_note_id, self.donor_note)
@@ -95,6 +96,8 @@ class Campaign(db.Model):
     outreach_channel_three = db.Column(db.String(64), nullable=True)
     total_funds_raised = db.Column(db.Integer, nullable=True)
     campaign_type = db.Column(db.String(64), nullable=True)
+
+
     
 
 def __repr__(self):
@@ -112,9 +115,12 @@ class Contribution(db.Model):
     date_of_contribution = db.Column(db.String(64), nullable=True)
     payment_method = db.Column(db.String(64), nullable=True)
     date_acknowledgement_sent = db.Column(db.String(64), nullable=True)
+    campaign_description = db.Column(db.String(64))
     contribution_note = db.Column(db.String(64), nullable=True)
-    
 
+    
+    
+    
 def __repr__(self):
         """provide helpful representation when printed"""
         return "<Contribution contribution_id=%s contribution_amount=%s>" % (self.contribution_id, self.contribution_amount)
@@ -141,4 +147,3 @@ if __name__ == "__main__":
     from tallyServer import app
     connect_to_db(app)
     print "Connected to DB."
-    whooshalchemy.whoosh_index(app, Donor)
