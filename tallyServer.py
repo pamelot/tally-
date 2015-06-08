@@ -1,15 +1,17 @@
 from jinja2 import StrictUndefined
 
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session, jsonify
 # //import os - not sure why this might be needed for log-in
 
 import sqlite3
 
-from alchemymodel import User, Donor, Donor_contact, Donor_note, Campaign, Contribution, db, connect_to_db
+import lazyload
 
-from sqlalchemy import text
+from alchemymodel import User, Donor, Campaign, Contribution, db, connect_to_db
 
-from datetime import datetime
+from sqlalchemy import *
+
+from datetime import datetime, date
 
 
 app = Flask(__name__)
@@ -57,15 +59,61 @@ def homepage():
     
     return render_template("home.html")
 
-@app.route('/donors')
-def donor_view():
+@app.route('/donors', methods=['GET'])
+def donor_home():
 
     return render_template("donors.html")
 
-@app.route('/donors/list')
-def donor_list():
 
-    return render_template("donors_list.html")
+@app.route('/donors', methods=['POST'])
+def donors_list():
+
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    
+    donors = Donor.query.filter_by(first_name=first_name, last_name=last_name).all()
+
+    if not donors:
+        flash("Donor does not exist. Please try again")
+        return redirect('/donors')
+    
+
+    return render_template('donors_list.html', donors=donors, first_name=first_name, last_name=last_name)
+
+
+
+@app.route('/donors/<int:donor_id>', methods=['GET'])
+def donor_list_view(donor_id):
+
+    donors = Donor.query.filter_by(donor_id = donor_id).all()
+    for donor in donors:
+
+        return render_template("donors_view.html", donors=donors)
+
+
+@app.route ('/donors/<int:donor_id>', methods=['POST'])
+def submit_edit_donor(donor_id):
+    
+    
+    donors = Donor.query.filter_by(donor_id=donor_id).first()
+
+    donor_change = Donor.query.get(donor_id)
+    donor_change.first_name = request.form["first_name"]
+    donor_change.last_name = request.form["last_name"]
+    donor_change.middle_name = request.form["middle_name"]
+    donor_change.employer = request.form["employer"]
+    donor_change.position = request.form["position"]
+    donor_change.email = request.form["email"]
+    donor_change.main_phone = request.form["phone"]
+    donor_change.street_address = request.form["street_address"]
+    donor_change.city = request.form["city"]
+    donor_change.state = request.form["state"]
+    donor_change.zip_code = request.form["zip_code"]
+
+    
+    db.session.commit()
+    flash("Donor has been updated.")
+    # return redirect("/donors")
 
 
 @app.route('/donors/new', methods=['GET'])
@@ -90,10 +138,9 @@ def new_donor_info():
     employer = request.form['employer']
     position = request.form['position']
 
-    new_donor = Donor(date_donor_added=date_donor_added, first_name=first_name, employer=employer, position=position, last_name=last_name, middle_name=middle_name)
-    new_donor_contact = Donor_contact(date_contact_added=date_contact_added, main_phone=main_phone, street_address=street_address, state=state, zip_code=zip_code, email=email)
+    new_donor = Donor(date_donor_added=date_donor_added, first_name=first_name, employer=employer, position=position, last_name=last_name, middle_name=middle_name, main_phone=main_phone, street_address=street_address, state=state, zip_code=zip_code, email=email)
 
-    db.session.add(new_donor, new_donor_contact)
+    db.session.add(new_donor)
     db.session.commit()
 
     flash("Donor %s added." % first_name)
@@ -101,8 +148,10 @@ def new_donor_info():
 
 @app.route('/contributions', methods=['GET'])
 def contribution_view():
+
+    lists = Campaign.query.all()
     
-    return render_template("contributions.html")
+    return render_template("contributions.html", lists=lists)
 
 @app.route('/contributions', methods=['POST'])
 def contributions_view():
@@ -112,13 +161,14 @@ def contributions_view():
     
 
     donors = Donor.query.filter_by(first_name=first_name, last_name=last_name).all()
+    lists = Campaign.query.all()
 
     if not donors:
         flash("Donor does not exist. Please try again")
         return redirect("/contributions")
     
 
-    return render_template("contribution_list.html", donors=donors, first_name=first_name, last_name=last_name)
+    return render_template("contribution_list.html", donors=donors, first_name=first_name, last_name=last_name, lists=lists)
 
 @app.route('/contributions/list', methods=['POST'])
 def contributions_view_list():
@@ -126,36 +176,85 @@ def contributions_view_list():
     
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
-    campaign_description = request.form["campaign_title"]
     search_field = request.form["search_field"]
-    donor = Donor.query.filter_by(last_name=last_name, first_name=first_name).all()
+    donors = Donor.query.filter_by(last_name=last_name, first_name=first_name).all()
+    campaign_description = request.form["campaign_description"]
     
-
     if search_field == "first_last":
 
-        contributions = Contribution.query.join(Donor).filter_by(first_name=first_name, last_name=last_name)
-        print contributions
+        for donor in donors:
+            donor_id = donor.donor_id
+            contributions = Contribution.query.filter_by(donor_id=donor_id)
+            for contribution in contributions:
+                full_date = datetime.strptime(contribution.date_of_contribution, "%Y-%m-%d %H:%M:%S")
+                date = datetime.date(full_date)
+
+            return render_template('existing_contribution_list.html', date=date, contributions=contributions)
+
 
     if search_field == "campaign":
+         
         contributions = Contribution.query.filter_by(campaign_description=campaign_description).all()
+        for contribution in contributions:
+            full_date = datetime.strptime(contribution.date_of_contribution, "%Y-%m-%d %H:%M:%S")
+            date = datetime.date(full_date)
+            
+
+            return render_template('existing_contribution_list.html', date=date, contributions=contributions)
 
     if search_field == "campaign_last":
 
-        contributions = Contribution.query.filter_by(campaign_description=campaign_description).join(Donor).filter_by(last_name=last_name)
+        contributions = db.session.query(Contribution).join(Donor).filter(Donor.last_name == last_name).all()
+        for contribution in contributions:
+            full_date = datetime.strptime(contribution.date_of_contribution, "%Y-%m-%d %H:%M:%S")
+            date = datetime.date(full_date)
+            
+        return render_template('existing_contribution_list.html', date=date, contributions=contributions)
+
+        
+    if search_field == "campaign_first":
      
+        contributions = db.session.query(Contribution).join(Donor).filter(Donor.first_name == first_name).all()
+        for contribution in contributions:
+            full_date = datetime.strptime(contribution.date_of_contribution, "%Y-%m-%d %H:%M:%S")
+            date = datetime.date(full_date)
+            
+        return render_template('existing_contribution_list.html', date=date, contributions=contributions)
 
-#     # if search_field == "campaign_first":
-#     #     # donors = Donor.query.filter_by(first_name=first_name).all()
-#     #     # donor_id = donors.donor_id
-#     #     contributions = Contribution.query.filter_by(donor_id=donor_id, campaign_id=campaign_id)
 
 
-    return render_template("existing_contribution_list.html", contributions=contributions)  
-
-@app.route("/contributions/edit/<int:contribution_id>", methods=['GET'])
+@app.route('/contributions/edit/<int:contribution_id>', methods=['GET'])
 def edit_contribution_form(contribution_id):
 
-    return render_template("contributions_edit.html")
+    contributions = Contribution.query.filter_by(contribution_id=contribution_id).all()
+    print contributions
+    for contribution in contributions:
+        donor_id = contribution.donor_id 
+        donors = Donor.query.filter_by(donor_id=donor_id).all()
+        lists = Campaign.query.all()
+        campaign_id = contribution.campaign_id
+        campaigns = Campaign.query.filter_by(campaign_id=campaign_id)
+        
+
+    return render_template("contributions_edit.html", contribution_id=contribution_id, donor_id=donor_id, campaigns=campaigns, contributions=contributions, donors=donors, lists=lists)
+
+@app.route ('/contributions/edit/<int:contribution_id>', methods=['POST'])
+def submit_edit_contribution_form(contribution_id):
+
+
+    print "hi again"
+    contribution_change = Contribution.query.get(contribution_id)
+    contribution_change.campaign_description = request.form["campaign_description"]
+    contribution_change.date_of_contribution = request.form["date_of_contribution"]
+    contribution_change.contribution_amount = request.form["contribution_amount"]
+    contribution_change.payment_method = request.form["payment_method"]
+    contribution_change.date_acknowledgement_sent = request.form["date_acknowledgement_sent"]
+    contribution_change.contribution_note = request.form["contribution_note"]
+
+    db.session.commit()
+    flash("Contribution has been added.")
+    return redirect("/contributions")
+
 
 
 @app.route("/contributions/<int:donor_id>", methods=['GET'])
@@ -190,11 +289,21 @@ def new_contribution_info(donor_id):
     flash("Contribution has been added.")
     return redirect("/contributions")
 
-@app.route('/campaigns')
+@app.route('/campaigns', methods=['GET'])
 def campaign_view():
 
-    return render_template("campaigns.html")
+    lists = Campaign.query.all()
+    return render_template("campaigns.html", lists=lists)
 
+@app.route('/campaigns', methods=['POST'])
+def campaign_view_edit():
+
+    campaign_id = request.form['campaign_id']
+    campaigns = Campaign.query.filter_by(campaign_id=campaign_id).all()
+    # return redirect("/campaigns/view")
+    return render_template('campaign_view.html', campaigns=campaigns)
+
+@app.route('/campaigns/view')
 
 @app.route('/campaigns/new', methods=['GET'])
 def new_campaign_form():
@@ -230,9 +339,51 @@ def top_contribution_view():
     for contribution in contributions:
         contribution_amount = contribution.contribution_amount
 
+    return render_template("top_contributions.html", contributions=contributions, contribution_amount=contribution_amount)
+
+@app.route('/reports/campaign2014')
+def campaign_report_2014():
+
+    # campaigns = Campaign.query.all()
+    # contributions = Contribution.query(Contribution.contribution_amount).group_by(Contribution.campaign_id)
+    # for contribution in contributions:
+    #     print contribtution 
+
+    campaigns = Campaign.query.all()
+    contribution_total_list = []
+    for campaign in campaigns:
+        campaign_id = campaign.campaign_id
+        contributions = db.session.query(func.sum(Contribution.contribution_amount)).join(Campaign).filter(Contribution.campaign_id == campaign_id).all() 
+        contributions = contributions[0][0]
+        contribution_total_list.append(contributions)
+   
+    print contribution_total_list
+        
+        # for contribution in contributions:
+        #     contribution_total = contribution[0]
+        #     contribution_amount = contribution.contribution_amount
+        #     print contribution_amount, campaign_id
+        
+    # donors = Donor.query.all()
+    # for donor in donors:
+    #     donor_id = donor.donor_id
+    #     frequency_of_contributions = db.session.query(func.count(Contribution.donor_id)).filter(Contribution.donor_id==donor_id).all()
+    #     frequency = frequency_of_contributions[0][0]
+    #     first_name = donor.first_name
+    #     last_name = donor.last_name
+    #     if frequency_of_contributions > 2:
+    #         print first_name, last_name, frequency
+
+
+
     
 
-    return render_template("top_contributions.html", contributions=contributions, contribution_amount=contribution_amount)
+    return render_template("2014_campaign_report.html", contribution_total_list=contribution_total_list, campaigns=campaigns, contributions=contributions) 
+
+@app.route('/reports/campaign2013')
+def campaign_report_2013():
+
+    return render_template("2013_campaign_report.html") 
 
 # cursor = connection.cursor()
 # QUERY = "INSERT INTO test VALUES(?)"
@@ -241,7 +392,16 @@ def top_contribution_view():
 # 	connection.commit()
 # 		return redirect('/show')
 
+@app.route('/reports/frequent_donors')
+def frequency_report():
+    donors = Donor.query.all()
+    for donor in donors:
+        donor_id = donor.donor_id
+        frequency_of_contributions = db.session.query(func.count(Contribution.donor_id)).filter(Contribution.donor_id==donor_id).all()
+        frequency = frequency_of_contributions[0][0]
+        print frequency_of_contributions
 
+    return render_template("frequent_donors.html", donors=donors, frequency=frequency)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

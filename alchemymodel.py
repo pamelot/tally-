@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-import flask.ext.whooshalchemy as whooshalchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, backref
+
 
 
 
@@ -24,6 +26,7 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+
     def __repr__(self):
         """provide helpful representation when printed"""
         return "<User user_id=%s user_login=%s>" % (self.user_id, self.user_login)
@@ -35,52 +38,25 @@ class Donor(db.Model):
 
 
     donor_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    donor_contact_id = db.Column(db.Integer, db.ForeignKey('donor_contacts.donor_contact_id'))
     date_donor_added = db.Column(db.DateTime, nullable=True)
     first_name = db.Column(db.String(64), nullable=True)
     last_name = db.Column(db.String(64), nullable=True)
     middle_name = db.Column(db.String(64), nullable=True)
     employer = db.Column(db.String(64), nullable=True)
     position = db.Column(db.String(64), nullable=True)
-
-    
-
-def __repr__(self):
-        """provide helpful representation when printed"""
-        return "<Donor donor_id=%s first_name=%s>" % (self.donor_id, self.first_name)
-
-class Donor_contact(db.Model):
-    
-    __tablename__ = "donor_contacts"
-
-    donor_contact_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    date_contact_added = db.Column(db.DateTime, nullable=True)
     main_phone = db.Column(db.String(64), nullable=True)
     street_address = db.Column(db.String(64), nullable=True)
     city = db.Column(db.String(64), nullable=True)
     state = db.Column(db.String(64), nullable=True)
     zip_code = db.Column(db.String(64), nullable=True)
     email = db.Column(db.String(64), nullable=True)
+
+    contributionsd = relationship('Contribution', backref='donors')
     
 
-def __repr__(self):
+    def __repr__(self):
         """provide helpful representation when printed"""
-        return "<Donor_contact donor_contact_id=%s>" % (self.donor_contact_id)
-
-class Donor_note(db.Model):
-    
-    __tablename__ = "donor_notes"
-
-    donor_note_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    donor_id = db.Column(db.Integer, db.ForeignKey('donors.donor_id'))
-    date_note_added = db.Column(db.DateTime, nullable=True)
-    donor_note = db.Column(db.String(400), nullable=True)
-    
-
-
-def __repr__(self):
-        """provide helpful representation when printed"""
-        return "<Donor_notes donor_note_id=%s donor_note=%s>" % (self.donor_note_id, self.donor_note)
+        return "<Donor donor_id=%s first_name=%s>" % (self.donor_id, self.first_name)
 
 
 class Campaign(db.Model):
@@ -97,10 +73,14 @@ class Campaign(db.Model):
     total_funds_raised = db.Column(db.Integer, nullable=True)
     campaign_type = db.Column(db.String(64), nullable=True)
 
+    contributionc = relationship('Contribution', backref='campaigns')
 
+    def to_jsonc(self):
+        print dict(campaign_id=self.campaign_id, campaign_description=self.campaign_description, campaign_start_date=self.campaign_start_date, campaign_end_date=self.campaign_end_date)
+
+        return dict(campaign_id=self.campaign_id, campaign_description=self.campaign_description, campaign_start_date=self.campaign_start_date, campaign_end_date=self.campaign_end_date)
     
-
-def __repr__(self):
+    def __repr__(self):
         """provide helpful representation when printed"""
         return "<Campaign campaign_id=%s campaign_description=%s>" % (self.campaign_id, self.campaign_description)
 
@@ -118,10 +98,16 @@ class Contribution(db.Model):
     campaign_description = db.Column(db.String(64))
     contribution_note = db.Column(db.String(64), nullable=True)
 
+    donorc = relationship("Donor", backref=backref('contributions'))
+
+    campaignc = relationship("Campaign", backref=backref('campaigns'))
+
+    def to_json(self):
+        return dict(contribution_id=self.contribution_id, campaign_id=self.campaign_id, donor_id=self.donor_id, contribution_amount=self.contribution_amount, date_of_contribution=self.date_of_contribution, payment_method=self.payment_method, date_acknowledgement_sent=self.date_acknowledgement_sent, campaign_description=self.campaign_description, contribution_note=self.contribution_note)
     
     
     
-def __repr__(self):
+    def __repr__(self):
         """provide helpful representation when printed"""
         return "<Contribution contribution_id=%s contribution_amount=%s>" % (self.contribution_id, self.contribution_amount)
 

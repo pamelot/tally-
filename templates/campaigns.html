@@ -7,7 +7,15 @@
 <p><a href="/campaigns/new">Create New Campaign</a></p>
 
 
-<p>Find Campaign</p>
+<form name="campaign_form" action="/campaigns" method="POST">
+		
+		<p><strong>View Campaign<strong></p>
+        <select name= 'campaign_id'>
+        {% for list in lists %}
+        <option value="{{ list.campaign_id }}">{{ list.campaign_description }}</option>
+        {% endfor %}
+        </select>
+<p><input type= "submit" value="submit"></p>
 
 <p><a href="/home">Home</a></p>
 

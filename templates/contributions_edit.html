@@ -1,8 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Edit Contribution</h1>
 
+	  {% for contribution in contributions %}
+<h1>Edit Contribution # {{ contribution.contribution_id }} </h1>
+	  
+
+
+      
+        <form action='/contributions/edit/{{ contribution.contribution_id }}' method='POST'> 
+      		{% endfor %}
+        	{% for donor in donors %}
+
+      		<p>First Name: <br><input type="text" value= '{{ donor.first_name }}' name="first_name"></input></p>
+        	<p>Last Name: <br><input type="text" value='{{donor.last_name}}' name="last_name"></input></p>
+      
+
+      		<p><strong>Associated Campaign<strong></p>
+        	<select name= 'campaign_description'>
+        	{% endfor %}
+        	{% for list in lists %}
+        	<option value="{{ list.campaign_description }}">{{ list.campaign_description }}</option>
+        
+      {% endfor %}
+	  {% for campaign in campaigns %}
+
+			<option selected='selected'>
+        	{{ campaign.campaign_description }}
+        	</select>
+        	
+      {% endfor %}
+      {% for contribution in contributions %}
+        
+        	<p>Date of Contribution: <input type="full-date" value='{{ contribution.date_of_contribution}}' name="date_of_contribution"></input></p>
+        	<p>Contribution Amount: <input type="text" value='{{ contribution.contribution_amount }}' name="contribution_amount"></input></p>
+        	<p>Payment Method: <input type="text" value='{{ contribution.payment_method }}' name="payment_method"></in/''//put></p>
+        	<p>Date Acknowledgement Sent: <input type="full-date" value='{{ contribution.date_acknowledgement_sent }}' name="date_acknowledgement_sent"></input></p>
+        	<p>Contribution Note: <input type="text" size='120' value='{{ contribution.contribution_note }}'name="contribution_note"></input></p>
+        
+
+        	<p>Submit to edit contribution record: <input type= "submit" value="submit"></p>
+
+      	</form>
+      {% endfor %}
+
+    
 
 
 

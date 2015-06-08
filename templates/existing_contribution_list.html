@@ -7,15 +7,17 @@
 <h2>Contribution List</h2>
 
     <ul>
-      {% for contribution in contributions %}
+    	{% for contribution in contributions %}
   
           <li>
       		<ul>
-                {{ contribution.donor_id }} 	|	{{ contribution.contribution_amount }}	|	{{ contribution.date_of_contribution }}		|		{{ contribution.campaign_description }} <a href="/contributions/edit/{{ contribution.contribution_id }}"> View Contribution</a>
+      			
+      			{{ contribution.donor_id }}	|	{{ contribution.contribution_id }}	|	{{ contribution.donorc.first_name }}	|	{{ contribution.donorc.last_name }}	|	{{ date }}	|	{{ contribution.campaign_description }}	|	{{ contribution.contribution_amount }}	|	<a href="/contributions/edit/{{ contribution.contribution_id }}"> View Contribution</a>
             </ul>
           </li>
-      {% endfor %}
-    </ul>
+        {% endfor %}
+    </ul> 
+
 
 
 <p><a href="/home">Home</a></p>

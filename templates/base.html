@@ -1,19 +1,20 @@
 <!doctype html>
 <html>
 <head>
+<link href="{{ url_for('static', filename='c3.css') }}" rel="stylesheet" type="text/css">
+<script 
+    src="{{ url_for('static', filename='c3.js') }}">
+</script>
+<script 
+    src="{{ url_for('static', filename='d3.js') }}">
+</script>
+
   <title>Tally</title>
+
 </head>
 
 <body>
-  Tally
-
-{% if "user_id" in session %}
-    <a href="/logout">Logout</a>
-{% else %}
-    <a href="/login">Login</a>
-{% endif %}
-
-  <hr>
+  
 
 {% for flash in get_flashed_messages() %}
   {{ flash }}
@@ -23,3 +24,11 @@
 
 </body>
 </html>
+
+<!-- ///{% if "user_id" in session %}
+    <a href="/logout">Logout</a>
+{% else %}
+    <a href="/login">Login</a>
+{% endif %}
+
+  <hr> -->

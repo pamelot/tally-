@@ -20,7 +20,14 @@
 	<form name="contribution_form" action="/contributions/list" method="POST">
 		<p>First Name: <input type="text" name="first_name"></input></p>
 		<p>Last Name: <input type="text" name="last_name"></input></p>
-		<p>Campaign Title: <input type="text" name="campaign_title"></input></p>
+		<p><strong>Associated Campaign<strong></p>
+        	<select name= 'campaign_description'>
+        	{% for list in lists %}
+        	<option value="{{ list.campaign_description }}">{{ list.campaign_description }}</option>
+        
+      		{% endfor %}
+        	</select>
+        	
 		<p>Search Fields</p>
 		<input type="radio" name="search_field" value="first_last">First and Last Name</input>
         <input type="radio" name="search_field" value="campaign">Campaign Title</input>
