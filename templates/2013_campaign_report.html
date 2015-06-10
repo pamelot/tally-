@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Tally</h1>
+
+
+<h2>2013 Campaign Report</h2>
+
+<div id="chart"></div>
+
+<script>
+var chart = c3.generate({
+  data: {
+    columns: [
+      ['March 2013 Crowdfunding Campaign', 5346],
+      ['June 2013 Golf Tournament', 7500],
+      ['December 2013 End of Year Appeal', 12500],
+    ],
+    type: 'donut'
+  },
+  donut: {
+    title: '2013 Campaign Totals',
+  }
+});
+</script>
+
+
+
+<p><a href="/home">Home</a></p>
+
+
+
+{% endblock %}
+

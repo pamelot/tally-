@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Tally</h1>
+
+{% for campaign in campaigns %}
+<h2>View/ Edit Campaign</h2>
+<h3>"{{ campaign.campaign_description }}"</h3>
+
+   <form  padding='20px' margin-left='50px' action="/campaigns/edit" method='POST'>
+
+        <p>Campaign Information:</p>
+        <table align='left' margin='100px'>
+        	
+        		<tr>Campaign Title: <input type="text" size= '40px' value= '{{ campaign.campaign_description }}' name="campaign_description"></input></tr><br><br>
+        		<tr>Campaign Start Date: <input type="full-date" size= '35px' value= '{{ campaign.campaign_start_date }}' name="campaign_start_date"></input></tr><br><br>
+        		<tr>Campaign End Date: <input type="full-date" size= '36x' value= '{{ campaign.campaign_end_date}}' name="campaign_end_date"></input></tr><br><br>
+        		<tr>Total Funds Raised: <input type="text" value='{{ campaign.total_funds_raised }}' size= '37px' name="total_funds_raised"></input></tr><br><br>
+        		<tr><input type= "submit" value="submit"></tr>
+        	<tr>
+        </table>
+    </form>
+
+
+
+{% endfor %}
+{% endblock %}
+
+  

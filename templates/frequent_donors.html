@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Tally</h1>
+
+<h2>Reports</h2>
+
+{% for donor in donors %}
+
+{{ donor.first_name }} {{ donor.last_name }} {{frequency}}
+
+{% endfor %}
+
+
+<!-- <p><a href="/contributions">View/ Create Contributions</a></p>
+<p><a href="/campaigns">Campaign Manager</a></p>
+<p><a href="/reports">Reports</a></p> -->
+
+
+
+
+{% endblock %}
