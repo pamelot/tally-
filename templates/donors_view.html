@@ -9,22 +9,22 @@
     <form action="new" method='POST'>
 
         <p>Basic Information</p>
-        <p>first name: <input type="text" value="{{ donor.first_name }}" name="first_name"></input></p>
+        <p size='30px'>first name: <input type="text" value="{{ donor.first_name }}" name="first_name"></input></p>
         <p>last name: <input type="text" value="{{ donor.last_name }}" name="last_name"></input></p>
-        <p>middle name: <input type="text" value="{{ donor.middle_name }}" name="middle_name"></input></p>
-        <p>employer: <input type="text" value="{{ donor.employer }}" name="employer"></input></p>
-        <p>position: <input type="text" value="{{ donor.position }}" name="position"></input></p>
-        <p>email: <input type="text" value="{{ donor.email }}" name="email"></input></p>
-        <p>phone: <input type="text" value="{{ donor.main_phone }}" name="phone"></input></p>
-        <p>street address: <input type="text" value="{{ donor.street_address }}" name="address"></input></p>
-        <p>city: <input type="text" value="{{ donor.city }}" name="city"></input></p>
-        <p>state: <input type="text" value="{{ donor.state }}" name="state"></input></p>
-        <p>zip code: <input type="text" value="{{ donor.zip_code }}" name="zip_code"></input></p>
+        <p size = '25px'>middle name: <input size='17px' type="text" value="{{ donor.middle_name }}" name="middle_name"></input></p>
+        <p>employer: <input type="text" value="{{ donor.employer }}" name="employer" size='21px'></input></p>
+        <p>position: <input type="text" size='22px' value="{{ donor.position }}" name="position"></input></p>
+        <p>email: <input type="text" size='25px' value="{{ donor.email }}" name="email"></input></p>
+        <p>phone: <input type="text" size='24px' value="{{ donor.main_phone }}" name="phone"></input></p>
+        <p>street address: <input type="text" size='17px' value="{{ donor.street_address }}" name="address"></input></p>
+        <p>city: <input type="text" value="{{ donor.city }}" name="city" size='27px'></input></p>
+        <p>state: <input type="text" value="{{ donor.state }}" name="state" size='26px'></input></p>
+        <p>zip code: <input type="text" value="{{ donor.zip_code }}" name="zip_code" size='23px'></input></p>
         <br>
         <p><input type= "submit" value="submit"></p>
     </form>
 
-    <p><a href="/home">Home</a></p>
+
     {% endfor %}
 
 {% endblock %}

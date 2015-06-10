@@ -9,15 +9,14 @@
 
 <form name="campaign_form" action="/campaigns" method="POST">
 		
-		<p><strong>View Campaign<strong></p>
+		<p>View Campaign</p>
         <select name= 'campaign_id'>
         {% for list in lists %}
-        <option value="{{ list.campaign_id }}">{{ list.campaign_description }}</option>
+        <option value="{{ list.campaign_id }}">{{ list.campaign_description }}</option><br>
         {% endfor %}
-        </select>
-<p><input type= "submit" value="submit"></p>
+        </select><br>
+<br><p><input type= "submit" value="submit"></p>
 
-<p><a href="/home">Home</a></p>
 
 
 

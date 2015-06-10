@@ -5,32 +5,31 @@
 
     <form action="/contributions/{{ donor.donor_id}}" method='POST'>
 
-        <p>Date of Contribution: <input type="date" name="date_of_contribution"></input></p>
-        <p>Contribution Amount: <input type="text" name="contribution_amount"></input></p>
-        <p>Payment Method: <input type="text" name="payment_method"></input></p>
+        <p>Date of Contribution: <input size='34px' type="date" name="date_of_contribution"></input></p>
+        <p>Contribution Amount: <input type="text" size='19px'name="contribution_amount"></input></p>
+        <p>Payment Method: <input type="text" size='23px'name="payment_method"></input></p>
         
-        <p><strong>Associated Campaign<strong></p>
+        <p>Associated Campaign</p>
         <select name= 'campaign_id'>
         {% for list in lists %}
-        <option value="{{ list.campaign_id }}">{{ list.campaign_description }}</option>
+        <option size='30px'value="{{ list.campaign_id }}">{{ list.campaign_description }}</option>
         {% endfor %}
         </select>
         <br>
         <p>Campaign Allocation</p>
         <input type="radio" name="campaign_type" value="general" checked>General</input>
-        <br>
         <input type="radio" name="campaign_type" value="restricted">Restricted</input>
         <br>
         
-        <p>Date Acknowledgement Sent: <input type="date" name="date_acknowledgement_sent"></input></p>
-        <p>Contribution Note: <input type="text" name="contribution_note"></input></p>
+        <p>Date Acknowledgement Sent: <input type="date" name="date_acknowledgement_sent" size="10px"></input></p>
+        <p>Contribution Note: <input size='24px'type="text" name="contribution_note"></input></p>
         
         
         <br>
         <p><input type= "submit" value="submit"></p>
     </form>
 
-    <p><a href="/home">Home</a></p>
+ 
 
 
 {% endblock %}

@@ -198,6 +198,7 @@ def contributions_view_list():
         for contribution in contributions:
             full_date = datetime.strptime(contribution.date_of_contribution, "%Y-%m-%d %H:%M:%S")
             date = datetime.date(full_date)
+            print full_date
             
 
             return render_template('existing_contribution_list.html', date=date, contributions=contributions)
@@ -208,7 +209,8 @@ def contributions_view_list():
         for contribution in contributions:
             full_date = datetime.strptime(contribution.date_of_contribution, "%Y-%m-%d %H:%M:%S")
             date = datetime.date(full_date)
-            
+            print date 
+            print full_date
         return render_template('existing_contribution_list.html', date=date, contributions=contributions)
 
         
@@ -335,7 +337,7 @@ def report_view():
 @app.route('/reports/topcontributions')
 def top_contribution_view():
 
-    contributions = Contribution.query.limit(100).all()
+    contributions = db.session.query(Contribution).filter(Contribution.contribution_amount > 800).all()
     for contribution in contributions:
         contribution_amount = contribution.contribution_amount
 

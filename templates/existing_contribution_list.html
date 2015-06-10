@@ -6,22 +6,18 @@
 
 <h2>Contribution List</h2>
 
-    <ul>
-    	{% for contribution in contributions %}
-  
-          <li>
-      		<ul>
-      			
-      			{{ contribution.donor_id }}	|	{{ contribution.contribution_id }}	|	{{ contribution.donorc.first_name }}	|	{{ contribution.donorc.last_name }}	|	{{ date }}	|	{{ contribution.campaign_description }}	|	{{ contribution.contribution_amount }}	|	<a href="/contributions/edit/{{ contribution.contribution_id }}"> View Contribution</a>
-            </ul>
-          </li>
-        {% endfor %}
-    </ul> 
-
-
-
-<p><a href="/home">Home</a></p>
-
+    <table style="width:100%">
+      {% for contribution in contributions %}
+      <tr>
+        <td>{{ contribution.donorc.first_name }}</td>
+        <td>{{ contribution.donorc.last_name }}</td>
+        <td>{{ date }}</td>
+        <td>{{ contribution.campaign_description }}</td>
+        <td>${{ contribution.contribution_amount }}</td>
+        <td><a href="/contributions/edit/{{ contribution.contribution_id }}"> View Contribution</a></td>
+      </tr>
+      {% endfor %}
+    </table>
 
 
 {% endblock %}

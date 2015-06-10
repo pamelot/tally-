@@ -2,6 +2,36 @@
 <html>
 <head>
 <link href="{{ url_for('static', filename='c3.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='bootstrap.css') }}" rel="stylesheet" type="text/css">
+
+<nav class="navbar navbar-center" s>
+  <div class="container-fluid">
+    <div  class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/home"><font size=20px>Tally</font></a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/donors">Donors <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="/contributions">Contributions <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="/campaigns">Campaigns <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="/reports">Reports <span class="sr-only">(current)</span></a></li>
+        
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/home">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <script 
     src="{{ url_for('static', filename='c3.js') }}">
 </script>

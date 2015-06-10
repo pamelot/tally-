@@ -12,11 +12,11 @@
       		{% endfor %}
         	{% for donor in donors %}
 
-      		<p>First Name: <br><input type="text" value= '{{ donor.first_name }}' name="first_name"></input></p>
-        	<p>Last Name: <br><input type="text" value='{{donor.last_name}}' name="last_name"></input></p>
+      		<p>First Name: <input type="text" value= '{{ donor.first_name }}' name="first_name"></input></p>
+        	<p>Last Name: <input type="text" value='{{donor.last_name}}' name="last_name"></input></p>
       
 
-      		<p><strong>Associated Campaign<strong></p>
+      		<p>Associated Campaign</p>
         	<select name= 'campaign_description'>
         	{% endfor %}
         	{% for list in lists %}
@@ -25,18 +25,18 @@
       {% endfor %}
 	  {% for campaign in campaigns %}
 
-			<option selected='selected'>
+			<option size="30px" selected='selected'>
         	{{ campaign.campaign_description }}
-        	</select>
+        	</select><br>
         	
       {% endfor %}
       {% for contribution in contributions %}
-        
-        	<p>Date of Contribution: <input type="full-date" value='{{ contribution.date_of_contribution}}' name="date_of_contribution"></input></p>
-        	<p>Contribution Amount: <input type="text" value='{{ contribution.contribution_amount }}' name="contribution_amount"></input></p>
-        	<p>Payment Method: <input type="text" value='{{ contribution.payment_method }}' name="payment_method"></in/''//put></p>
-        	<p>Date Acknowledgement Sent: <input type="full-date" value='{{ contribution.date_acknowledgement_sent }}' name="date_acknowledgement_sent"></input></p>
-        	<p>Contribution Note: <input type="text" size='120' value='{{ contribution.contribution_note }}'name="contribution_note"></input></p>
+          <br>
+        	<p>Date of Contribution: <input size='20px' type="full-date" value='{{ contribution.date_of_contribution}}' name="date_of_contribution"></input></p>
+        	<p>Contribution Amount: <input size='19px'type="text" value='{{ contribution.contribution_amount }}' name="contribution_amount"></input></p>
+        	<p>Payment Method: <input size='23px'type="text" value='{{ contribution.payment_method }}' name="payment_method"></input></p>
+        	<p>Date Acknowledgement Sent: <input size='18px' type="full-date" value='{{ contribution.date_acknowledgement_sent }}' name="date_acknowledgement_sent"></input></p>
+        	<p>Contribution Note: <input type="text" size='30' value='{{ contribution.contribution_note }}'name="contribution_note"></input></p>
         
 
         	<p>Submit to edit contribution record: <input type= "submit" value="submit"></p>
@@ -49,7 +49,6 @@
 
 
 
-<p><a href="/home">Home</a></p>
 
 
 

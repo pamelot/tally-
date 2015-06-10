@@ -6,18 +6,23 @@
 
 <h2>Donor List</h2>
 
-    <ul>
+    <table padding='50px' align='center' margin-left='50px'>
       {% for donor in donors %}
-          <li>
-      		<ul>
-                {{ donor.donor_id }}	|	{{ donor.first_name }}	|	{{ donor.last_name }} <a href="/donors/{{ donor.donor_id }}">View Donor Record</a>
-            </ul>
-          </li>
+          
+          <tr>
+            {{ 		donor.first_name }}	
+          </tr>
+          <tr>
+            {{   donor.last_name }} 
+          </tr>
+          <tr>
+            <a href="/donors/{{ donor.donor_id }}">  View Donor Record</a>
+          </tr>
+
       {% endfor %}
-    </ul>
+	</table>   
 
 
-<p><a href="/home">Home</a></p>
 
 
 
